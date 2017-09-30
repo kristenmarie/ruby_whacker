@@ -11,6 +11,7 @@ class WhackARuby < Gosu::Window
     @height = 50
     @velocity_x = 5
     @velocity_y = 5
+    @visible = 0
   end
 
   # Update means animate!
@@ -24,10 +25,19 @@ class WhackARuby < Gosu::Window
     if @y + @height / 2 > 600 || @y - @height / 2 < 0
       @velocity_y *= -1
     end
+    # Decrease visible once each frame
+    @visible -= 1
+    # Random chance visible can be visible for 30 frames.
+    if @visible < -10 && rand < 0.01
+      @visible = 30
+    end
   end
 
   def draw
-    @image.draw(@x - @width/2, @y - @height / 2, 1)
+    # Only show ruby when visible is positive.
+    if @visible > 0
+      @image.draw(@x - @width/2, @y - @height / 2, 1)
+    end
   end
 
 end
