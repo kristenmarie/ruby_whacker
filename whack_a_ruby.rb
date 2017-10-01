@@ -4,7 +4,8 @@ class WhackARuby < Gosu::Window
   def initialize
     super(800, 600)
     self.caption = 'Whack the Ruby!'
-    @image = Gosu::Image.new('ruby.png')
+    @ruby = Gosu::Image.new('img/ruby.png')
+    @hammer = Gosu::Image.new('img/hammer.png')
     @x = 200
     @y = 200
     @width = 50
@@ -12,6 +13,7 @@ class WhackARuby < Gosu::Window
     @velocity_x = 5
     @velocity_y = 5
     @visible = 0
+    @hit = 0
   end
 
   # Update means animate!
@@ -36,10 +38,30 @@ class WhackARuby < Gosu::Window
   def draw
     # Only show ruby when visible is positive.
     if @visible > 0
-      @image.draw(@x - @width/2, @y - @height / 2, 1)
+      @ruby.draw(@x - @width/2, @y - @height / 2, 1)
     end
+    @hammer.draw(mouse_x - 40, mouse_y - 10, 1)
+    # Screen turns green when ruby is hit, red when its a miss.
+    if @hit == 0
+      c = Gosu::Color::NONE
+    elsif @hit == 1
+      c = Gosu::Color::GREEN
+    elsif @hit == -1
+      c = Gosu::Color::RED
+    end
+    draw_quad(0, 0, c, 800, 0, c, 800, 600, c, 0, 600, c)
+    @hit = 0
   end
 
+  def button_down(id)
+    if(id == Gosu::MsLeft)
+      if Gosu.distance(mouse_x, mouse_y, @x, @y) < 50 && @visible >= 0
+        @hit = 1
+      else
+        @hit = -1
+      end
+    end
+  end
 end
 window = WhackARuby.new
 window.show
