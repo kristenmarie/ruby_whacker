@@ -35,6 +35,7 @@ class WhackARuby < Gosu::Window
     if @visible < -10 && rand < 0.01
       @visible = 30
     end
+    @time_left = (100 - (Gosu.milliseconds / 1000))
   end
 
   def draw
@@ -54,6 +55,7 @@ class WhackARuby < Gosu::Window
     draw_quad(0, 0, c, 800, 0, c, 800, 600, c, 0, 600, c)
     @hit = 0
     @font.draw(@score.to_s, 700, 20, 2)
+    @font.draw(@time_left.to_s, 20, 20, 2)
   end
 
   def button_down(id)
